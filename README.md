@@ -1,8 +1,27 @@
 # 数字厨房 · Digital Kitchen
 
-一个基于微信小程序的智能厨房助手，帮助用户发现菜谱、管理烹饪记录，并通过 AI 分析食材营养，让每个人都能轻松享受烹饪的乐趣。
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square">
+  <img src="https://img.shields.io/badge/platform-微信小程序-orange?style=flat-square">
+  <img src="https://img.shields.io/badge/tech-TypeScript%20%2B%20SASS-blue?style=flat-square">
+  <img src="https://img.shields.io/github/stars/hope0719/digital-kitchen-miniprogram?style=flat-square">
+</p>
 
-欢迎公开使用、自由学习和二次开发 🍳
+<p align="center">
+  一个基于微信小程序的智能厨房助手，帮助用户发现菜谱、管理烹饪记录，并通过 AI 分析食材营养，让每个人都能轻松享受烹饪的乐趣。
+</p>
+
+<p align="center">
+  <b>🌟 欢迎公开使用、自由学习和二次开发 🍳</b>
+</p>
+
+---
+
+<p align="center">
+  <a href="https://github.com/hope0719/digital-kitchen-miniprogram">GitHub 仓库</a> ·
+  <a href="https://github.com/hope0719/digital-kitchen-miniprogram/issues">提交 Issue</a> ·
+  <a href="https://github.com/hope0719/digital-kitchen-miniprogram/pulls">提交 PR</a>
+</p>
 
 ---
 
