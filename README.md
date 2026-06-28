@@ -80,7 +80,7 @@
 
 1. **克隆项目**
    ```bash
-   git clone https://github.com/your-username/digital-kitchen-miniprogram.git
+   git clone https://github.com/hope0719/digital-kitchen-miniprogram.git
    cd digital-kitchen-miniprogram
    ```
 
@@ -150,7 +150,7 @@
 ## 📮 联系方式
 
 如有问题或建议，欢迎通过以下方式联系：
-- 提交 [GitHub Issue](https://github.com/your-username/digital-kitchen-miniprogram/issues)
+- 提交 [GitHub Issue](https://github.com/hope0719/digital-kitchen-miniprogram/issues)
 - 在微信开放社区交流
 
 ---
