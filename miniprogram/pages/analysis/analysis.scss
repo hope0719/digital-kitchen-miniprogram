@@ -1,0 +1,460 @@
+@import '../../styles/tokens.scss';
+
+.page {
+  min-height: 100vh;
+  background: $surface;
+  padding-bottom: 240rpx;
+}
+
+// ============ Top AppBar ============
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 $spacing-md;
+  background: $surface;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+.brand {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 700;
+  color: $primary;
+}
+.avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-pill;
+  overflow: hidden;
+  border: 4rpx solid $primary-container;
+  image { width: 100%; height: 100%; }
+}
+
+// ============ Layout ============
+.content {
+  padding: $spacing-lg $spacing-md $spacing-2xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+  max-width: 700rpx;
+  margin: 0 auto;
+  width: 100%;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+// ============ Upload ============
+.upload-card {
+  position: relative;
+  background: $surface-container-low;
+  border: 4rpx dashed $outline-variant;
+  border-radius: $radius-xl;
+  padding: 64rpx 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+.upload-hover {
+  border-color: $primary;
+}
+.upload-glow {
+  position: absolute;
+  bottom: -96rpx;
+  right: -96rpx;
+  width: 384rpx;
+  height: 384rpx;
+  background: $secondary-container;
+  opacity: 0.2;
+  filter: blur(60rpx);
+  border-radius: $radius-pill;
+}
+.upload-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.upload-icon {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: $radius-pill;
+  background: $primary-fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+.upload-title {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+  color: $on-surface;
+}
+.upload-sub {
+  font-size: $fs-body-md;
+  color: $on-surface-variant;
+}
+
+// ============ Textarea ============
+.textarea-wrap {
+  position: relative;
+}
+.recipe-textarea {
+  width: 100%;
+  height: 256rpx;
+  background: $surface-container-low;
+  border-radius: $radius-xl;
+  padding: 24rpx 24rpx 96rpx 24rpx;
+  box-sizing: border-box;
+  font-size: $fs-body-md;
+  color: $on-surface;
+  line-height: 1.5;
+}
+.textarea-placeholder {
+  color: $outline;
+}
+.analyze-btn {
+  position: absolute;
+  right: 16rpx;
+  bottom: 16rpx;
+  background: $primary;
+  color: #fff;
+  padding: 12rpx 24rpx;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  box-shadow: $shadow-md;
+}
+.analyze-hover {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+// ============ Health Score ============
+.score-card {
+  position: relative;
+  background: $primary-fixed;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+.score-deco {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 256rpx;
+  height: 256rpx;
+  background: $on-primary-fixed-variant;
+  opacity: 0.1;
+  border-radius: $radius-pill;
+  transform: translate(96rpx, -96rpx);
+}
+.score-left {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+.score-title {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+  color: $on-primary-fixed;
+}
+.score-tip {
+  font-size: $fs-body-md;
+  color: $on-primary-fixed;
+  opacity: 0.8;
+  margin-bottom: 16rpx;
+}
+.score-num {
+  display: flex;
+  align-items: baseline;
+  gap: 8rpx;
+}
+.score-big {
+  font-family: $font-headline;
+  font-size: 64rpx;
+  font-weight: 700;
+  color: $on-primary-fixed;
+  line-height: 1;
+}
+.score-small {
+  font-size: $fs-headline-md;
+  color: $on-primary-fixed;
+  opacity: 0.7;
+}
+.score-right {
+  position: relative;
+  z-index: 1;
+  width: 192rpx;
+  height: 192rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 圆环进度（用 SVG 实现，兼容 Skyline）
+.ring {
+  position: relative;
+  width: 192rpx;
+  height: 192rpx;
+}
+.ring-svg {
+  width: 100%;
+  height: 100%;
+}
+.ring-track {
+  fill: none;
+  stroke: rgba(57, 12, 0, 0.2);
+  stroke-width: 8;
+}
+.ring-progress {
+  fill: none;
+  stroke: $on-primary-fixed;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s ease;
+}
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ Panel 通用 ============
+.panel {
+  background: $surface-container-high;
+  border-radius: $radius-xl;
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-tag {
+  font-size: $fs-label-md;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+  color: $on-surface-variant;
+}
+.panel-title {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+  color: $on-surface;
+}
+.sub-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.sub-icon {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-pill;
+  background: $secondary-container;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ============ Macros ============
+.macro-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.macro-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: $fs-body-md;
+  color: $on-surface;
+  margin-bottom: 8rpx;
+}
+.macro-value {
+  font-weight: 700;
+}
+.macro-track {
+  height: 16rpx;
+  background: $surface;
+  border-radius: $radius-pill;
+  overflow: hidden;
+}
+.macro-fill {
+  height: 100%;
+  border-radius: $radius-pill;
+  transition: width 0.6s ease;
+}
+
+// ============ Calorie Card ============
+.calorie-card {
+  position: relative;
+  height: 320rpx;
+  border-radius: $radius-xl;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+.calorie-mask {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+}
+.calorie-inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: $spacing-md;
+}
+.calorie-text {
+  color: #fff;
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+}
+
+// ============ Substitutions ============
+.sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+}
+.sub-card {
+  background: $surface-container-low;
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  transition: background 0.2s ease;
+}
+.sub-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120rpx;
+}
+.sub-cell.primary .sub-name {
+  color: $secondary;
+  font-weight: 700;
+  font-size: 28rpx;
+}
+.sub-cell.secondary {
+  opacity: 0.6;
+}
+.sub-tag {
+  font-size: 18rpx;
+  color: $outline;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  margin-bottom: 4rpx;
+}
+.sub-name {
+  font-size: 28rpx;
+  color: $on-surface;
+  font-weight: 500;
+}
+.strike {
+  text-decoration: line-through;
+}
+
+// ============ Tips ============
+.tips-card {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20rpx);
+  -webkit-backdrop-filter: blur(20rpx);
+  border: 2rpx solid rgba(255, 255, 255, 0.6);
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+.tips-head {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+.tip-item {
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-start;
+}
+.tip-num {
+  flex-shrink: 0;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-pill;
+  background: $tertiary-fixed;
+  color: $on-tertiary-fixed;
+  font-size: $fs-label-md;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tip-text {
+  flex: 1;
+  font-size: $fs-body-md;
+  color: $on-surface;
+  line-height: 1.6;
+}
+
+// ============ CTA ============
+.cta-wrap {
+  padding: $spacing-xl 0;
+}
+.cta-btn {
+  background: $primary;
+  color: #fff;
+  border-radius: $radius-pill;
+  padding: 28rpx 0;
+  text-align: center;
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+  box-shadow: 0 8rpx 24rpx rgba(171, 53, 0, 0.2);
+  transition: transform 0.15s ease;
+}
+.cta-hover {
+  transform: scale(0.98);
+}

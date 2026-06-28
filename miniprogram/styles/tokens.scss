@@ -1,0 +1,138 @@
+// =========================================================================
+//  Digital Kitchen — Design Tokens
+//  与原 HTML 设计的 Material 3 token 保持一致
+// =========================================================================
+
+// 基础尺寸：750rpx 设计稿
+$design-width: 750;
+
+// —— 颜色 ——
+$surface: #fcf9f8;
+$surface-dim: #dcd9d9;
+$surface-bright: #fcf9f8;
+$surface-container-lowest: #ffffff;
+$surface-container-low: #f6f3f2;
+$surface-container: #f0eded;
+$surface-container-high: #eae7e7;
+$surface-container-highest: #e4e2e1;
+$surface-variant: #e4e2e1;
+
+$on-surface: #1b1c1c;
+$on-surface-variant: #594139;
+$on-background: #1b1c1c;
+$background: #fcf9f8;
+
+$primary: #ab3500;
+$primary-container: #ff6b35;
+$on-primary: #ffffff;
+$on-primary-container: #5f1900;
+$primary-fixed: #ffdbd0;
+$primary-fixed-dim: #ffb59d;
+$on-primary-fixed: #390c00;
+$on-primary-fixed-variant: #832600;
+
+$secondary: #006e1c;
+$secondary-container: #91f78e;
+$on-secondary: #ffffff;
+$on-secondary-container: #00731e;
+$secondary-fixed: #94f990;
+$secondary-fixed-dim: #78dc77;
+
+$tertiary: #7c5800;
+$tertiary-container: #c78f00;
+$on-tertiary: #ffffff;
+$on-tertiary-container: #432e00;
+$tertiary-fixed: #ffdea8;
+$tertiary-fixed-dim: #ffba20;
+$on-tertiary-fixed: #271900;
+$on-tertiary-fixed-variant: #5e4200;
+
+$error: #ba1a1a;
+$on-error: #ffffff;
+$error-container: #ffdad6;
+$on-error-container: #93000a;
+
+$outline: #8d7168;
+$outline-variant: #e1bfb5;
+
+// 分类卡片浅色
+$cat-quick: #fff4f0;      // Quick Meals
+$cat-healthy: #f0fff4;    // Healthy
+$cat-dessert: #fff9f0;    // Desserts
+$cat-breakfast: #f4f0ff;  // Breakfast
+
+// 品牌强调
+$indigo: #4f46e5;
+
+// —— 字体 ——
+$font-headline: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+$font-body: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+
+// —— 字号 ——
+$fs-display: 64rpx;
+$fs-headline-lg: 48rpx;
+$fs-headline-lg-mobile: 44rpx;
+$fs-headline-md: 40rpx;
+$fs-body-lg: 32rpx;
+$fs-body-md: 28rpx;
+$fs-label-md: 24rpx;
+
+// —— 圆角 ——
+$radius-sm: 8rpx;
+$radius-md: 16rpx;
+$radius-lg: 24rpx;
+$radius-xl: 32rpx;
+$radius-pill: 9999px;
+
+// —— 间距 ——
+$spacing-xs: 8rpx;
+$spacing-sm: 16rpx;
+$spacing-md: 24rpx;
+$spacing-lg: 32rpx;
+$spacing-xl: 48rpx;
+$spacing-2xl: 64rpx;
+
+// —— 阴影 ——
+$shadow-sm: 0 2rpx 6rpx rgba(0, 0, 0, 0.04);
+$shadow-md: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);
+$shadow-card: 0 4rpx 24rpx rgba(171, 53, 0, 0.08);
+
+// —— 安全区（在小程序里通过 wx.getWindowInfo().safeArea 取，不需 SCSS 变量）——
+// 占位：保留 0rpx 作为兜底
+$safe-bottom: 0rpx;
+
+// =========================================================================
+// 工具类
+// =========================================================================
+
+.container-page {
+  min-height: 100vh;
+  padding-bottom: 180rpx; // 留出 tabbar 空间
+  box-sizing: border-box;
+}
+
+.text-display { font-size: $fs-display; line-height: 1.25; font-weight: 700; }
+.text-headline-lg { font-size: $fs-headline-lg; line-height: 1.33; font-weight: 700; }
+.text-headline-lg-mobile { font-size: $fs-headline-lg-mobile; line-height: 1.27; font-weight: 700; }
+.text-headline-md { font-size: $fs-headline-md; line-height: 1.4; font-weight: 600; }
+.text-body-lg { font-size: $fs-body-lg; line-height: 1.5; font-weight: 400; }
+.text-body-md { font-size: $fs-body-md; line-height: 1.43; font-weight: 400; }
+.text-label-md { font-size: $fs-label-md; line-height: 1.33; font-weight: 600; }
+
+// 标签胶囊
+.chip {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  font-size: 20rpx;
+  font-weight: 700;
+  border-radius: $radius-pill;
+  letter-spacing: 0.5rpx;
+}
+
+// 通用卡片
+.surface-card {
+  background: $surface-container-lowest;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+}

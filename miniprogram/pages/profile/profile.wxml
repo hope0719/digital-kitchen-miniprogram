@@ -1,0 +1,107 @@
+<!-- pages/profile/profile.wxml -->
+<view class="page page-mesh">
+
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="top: {{statusBarHeight}}px;">
+    <icon name="menu" size="28" color="#ab3500" />
+    <text class="brand">数字厨房</text>
+    <view class="avatar-sm">
+      <image src="{{avatar}}" mode="aspectFill" />
+    </view>
+  </view>
+
+  <view class="content" style="padding-top: {{contentTop}}rpx;">
+
+    <!-- Hero Profile Card -->
+    <view class="section">
+      <view class="profile-card">
+        <view class="profile-avatar">
+          <image src="{{avatar}}" mode="aspectFill" />
+          <view class="pro-badge">
+            <icon name="verified" size="14" color="#ffffff" fill="{{true}}" />
+            <text>PRO</text>
+          </view>
+        </view>
+        <text class="profile-name">{{name}}</text>
+        <view class="profile-level">
+          <icon name="restaurant" size="18" color="#594139" />
+          <text>{{level}}</text>
+        </view>
+
+        <view class="stats">
+          <view class="stat-cell" wx:for="{{stats}}" wx:key="label">
+            <text class="stat-value">{{item.value}}</text>
+            <text class="stat-label">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Action Cards -->
+    <view class="section">
+      <view class="action-grid">
+        <view class="action-card"
+              wx:for="{{actionCards}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onTapAction"
+              hover-class="action-hover">
+          <view class="action-icon" style="background: {{item.bg}};">
+            <icon name="{{item.icon}}" size="22" color="{{item.color}}" />
+          </view>
+          <text class="action-title">{{item.title}}</text>
+          <text class="action-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- AI 分析亮点 -->
+    <view class="section">
+      <view class="ai-card" hover-class="ai-hover" bindtap="onTapAi">
+        <view class="ai-deco"></view>
+        <view class="ai-inner">
+          <view class="ai-text">
+            <view class="ai-tag">
+              <icon name="neurology" size="16" color="#ff6b35" fill="{{true}}" />
+              <text class="ai-tag-text">高级 AI</text>
+            </view>
+            <text class="ai-title">AI 分析记录</text>
+            <text class="ai-sub">查看您的营养分析和技巧提升。</text>
+          </view>
+          <view class="ai-arrow">
+            <icon name="chevron_right" size="22" color="#ffffff" />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 设置列表 -->
+    <view class="section">
+      <text class="section-label">偏好与支持</text>
+      <view class="settings">
+        <view class="setting-row"
+              wx:for="{{settings}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onTapSetting"
+              hover-class="setting-hover">
+          <view class="setting-left">
+            <icon name="{{item.icon}}"
+                  size="22"
+                  color="{{item.danger ? '#ba1a1a' : '#594139'}}" />
+            <text class="setting-label {{item.danger ? 'danger' : ''}}">{{item.label}}</text>
+          </view>
+          <block wx:if="{{item.arrow !== false}}">
+            <icon name="arrow_forward_ios" size="16" color="#e1bfb5" />
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <view class="version">
+      <text>Digital Kitchen v2.4.0</text>
+    </view>
+
+  </view>
+
+</view>

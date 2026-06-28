@@ -1,0 +1,237 @@
+<view class="page">
+
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="topbar-inner">
+      <view class="topbar-left">
+        <icon name="bakery_dining" size="28" color="#ab3500" />
+        <text class="brand">数字厨房</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 内容区域 -->
+  <view class="content" style="padding-top: {{contentTop}}px;">
+
+    <!-- 问候区 -->
+    <view class="greeting-section">
+      <text class="greeting-text">{{greeting}}，{{userName}}！</text>
+      <text class="greeting-sub">今天想做什么好吃的？</text>
+    </view>
+
+    <!-- 搜索栏 -->
+    <view class="search-section">
+      <view class="search-bar {{searchFocus ? 'search-bar--focused' : ''}}">
+        <icon name="search" size="20" color="#8d7168" />
+        <input
+          class="search-input"
+          placeholder="搜索菜谱、食材..."
+          placeholder-class="search-placeholder"
+          value="{{searchValue}}"
+          bindinput="onSearchInput"
+          bindfocus="onSearchFocus"
+          bindblur="onSearchBlur"
+          bindconfirm="onSearchConfirm"
+          confirm-type="search"
+        />
+        <view class="search-clear" wx:if="{{searchValue}}" bindtap="onClearSearch">
+          <icon name="close" size="16" color="#8d7168" />
+        </view>
+      </view>
+    </view>
+
+    <!-- Banner 轮播 -->
+    <view class="banner-section">
+      <swiper class="banner-swiper" autoplay interval="4000" circular bindchange="onBannerChange">
+        <swiper-item wx:for="{{banners}}" wx:key="id">
+          <view class="banner-card"
+                style="background: linear-gradient(135deg, {{item.color}} 0%, {{item.color2}} 100%);"
+                bindtap="onTapBanner">
+            <view class="banner-body">
+              <text class="banner-title">{{item.title}}</text>
+              <text class="banner-subtitle">{{item.subtitle}}</text>
+              <view class="banner-btn">查看详情</view>
+            </view>
+            <view class="banner-deco">
+              <view class="deco-circle deco-circle--1"></view>
+              <view class="deco-circle deco-circle--2"></view>
+              <view class="deco-circle deco-circle--3"></view>
+            </view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view class="banner-dots">
+        <view class="banner-dot {{currentBanner === index ? 'banner-dot--active' : ''}}" wx:for="{{banners}}" wx:key="id"></view>
+      </view>
+    </view>
+
+    <!-- 快捷分类 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">分类</text>
+      </view>
+      <view class="category-grid">
+        <view class="category-item"
+              wx:for="{{categories}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              data-name="{{item.name}}"
+              bindtap="onTapCategory">
+          <view class="category-icon-box" style="background: {{item.iconBg}};">
+            <icon name="{{item.icon}}" size="28" color="{{item.color}}" />
+          </view>
+          <text class="category-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 今日推荐 - 横向滑动 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">今日推荐</text>
+        <view class="section-link" bindtap="onViewAllRecs">
+          <text>查看全部</text>
+          <icon name="arrow_forward" size="14" color="#ab3500" />
+        </view>
+      </view>
+      <scroll-view class="rec-scroll" scroll-x enhanced showScrollbar="{{false}}">
+        <view class="rec-list">
+          <view class="rec-card"
+                wx:for="{{recommendations}}"
+                wx:key="id"
+                data-id="{{item.id}}"
+                bindtap="onTapRecCard"
+                style="background: linear-gradient(135deg, {{item.color}} 0%, {{item.color2}} 100%);">
+            <view class="rec-deco">
+              <svg viewBox="0 0 64 64" width="100" height="100" class="food-svg" opacity="0.3">
+                <!-- 沙拉 -->
+                <block wx:if="{{item.foodSvg === 'salad'}}">
+                  <circle cx="32" cy="32" r="26" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <ellipse cx="32" cy="28" rx="18" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <circle cx="24" cy="22" r="3" fill="#fff"/>
+                  <circle cx="36" cy="24" r="2.5" fill="#fff"/>
+                  <circle cx="30" cy="36" r="2" fill="#fff"/>
+                </block>
+                <!-- 牛排 -->
+                <block wx:if="{{item.foodSvg === 'steak'}}">
+                  <ellipse cx="32" cy="34" rx="22" ry="18" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <ellipse cx="32" cy="32" rx="16" ry="12" fill="none" stroke="#fff" stroke-width="1"/>
+                  <line x1="18" y1="26" x2="46" y2="40" stroke="#fff" stroke-width="1"/>
+                  <line x1="18" y1="40" x2="46" y2="26" stroke="#fff" stroke-width="1"/>
+                </block>
+                <!-- 三文鱼 -->
+                <block wx:if="{{item.foodSvg === 'salmon'}}">
+                  <ellipse cx="32" cy="34" rx="24" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <path d="M14 34 Q20 22 32 22 T50 34" fill="none" stroke="#fff" stroke-width="1"/>
+                  <line x1="18" y1="34" x2="46" y2="34" stroke="#fff" stroke-width="1"/>
+                  <line x1="24" y1="28" x2="24" y2="40" stroke="#fff" stroke-width="0.8"/>
+                  <line x1="32" y1="26" x2="32" y2="42" stroke="#fff" stroke-width="0.8"/>
+                  <line x1="40" y1="28" x2="40" y2="40" stroke="#fff" stroke-width="0.8"/>
+                </block>
+              </svg>
+            </view>
+            <view class="rec-body">
+              <view class="rec-tag">{{item.tag}}</view>
+              <text class="rec-title">{{item.title}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 每日小贴士 -->
+    <view class="tip-card">
+      <view class="tip-head">
+        <icon name="lightbulb" size="18" color="#ab3500" />
+        <text class="tip-label">每日小贴士</text>
+      </view>
+      <text class="tip-text">{{dailyTip}}</text>
+    </view>
+
+    <!-- 热门食谱 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">热门食谱</text>
+        <view class="section-link" bindtap="onViewAllRecipes">
+          <text>查看全部</text>
+          <icon name="arrow_forward" size="14" color="#ab3500" />
+        </view>
+      </view>
+      <view class="recipe-grid">
+        <view class="recipe-card"
+              wx:for="{{recipes}}"
+              wx:key="id"
+              data-id="{{item.id}}"
+              bindtap="onTapRecipe">
+          <view class="recipe-cover" style="background: linear-gradient(135deg, {{item.color}} 0%, {{item.color2}} 100%);">
+            <view class="like-btn" catchtap="onToggleLike" data-id="{{item.id}}">
+              <icon name="favorite" size="16" color="{{item.liked ? '#FF6B35' : '#fff'}}" fill="{{item.liked}}" />
+            </view>
+            <view class="food-deco">
+              <svg viewBox="0 0 64 64" width="72" height="72" class="food-svg" opacity="0.3">
+                <!-- 蘑菇 -->
+                <block wx:if="{{item.foodSvg === 'mushroom'}}">
+                  <ellipse cx="32" cy="26" rx="20" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <rect x="26" y="28" width="12" height="20" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="22" y1="22" x2="26" y2="16" stroke="#fff" stroke-width="1"/>
+                  <line x1="42" y1="22" x2="38" y2="16" stroke="#fff" stroke-width="1"/>
+                </block>
+                <!-- 煎饼 -->
+                <block wx:if="{{item.foodSvg === 'pancake'}}">
+                  <ellipse cx="32" cy="36" rx="22" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <ellipse cx="32" cy="32" rx="22" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <ellipse cx="32" cy="28" rx="22" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <path d="M24 20 Q28 14 32 20 T40 20" fill="none" stroke="#fff" stroke-width="1"/>
+                </block>
+                <!-- 鸡肉 -->
+                <block wx:if="{{item.foodSvg === 'chicken'}}">
+                  <ellipse cx="32" cy="34" rx="20" ry="16" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <path d="M22 30 Q28 24 34 30 T46 30" fill="none" stroke="#fff" stroke-width="1"/>
+                  <path d="M18 34 L22 26" fill="none" stroke="#fff" stroke-width="1"/>
+                  <path d="M46 34 L50 26" fill="none" stroke="#fff" stroke-width="1"/>
+                  <circle cx="26" cy="28" r="1.5" fill="#fff"/>
+                  <circle cx="38" cy="28" r="1.5" fill="#fff"/>
+                </block>
+                <!-- 披萨 -->
+                <block wx:if="{{item.foodSvg === 'pizza'}}">
+                  <ellipse cx="32" cy="36" rx="22" ry="14" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <path d="M16 36 L32 20 L48 36" fill="none" stroke="#fff" stroke-width="1"/>
+                  <circle cx="28" cy="30" r="2" fill="#fff"/>
+                  <circle cx="36" cy="34" r="2" fill="#fff"/>
+                  <circle cx="30" cy="38" r="1.5" fill="#fff"/>
+                </block>
+              </svg>
+            </view>
+          </view>
+          <view class="recipe-body">
+            <text class="recipe-title">{{item.title}}</text>
+            <view class="recipe-meta">
+              <view class="meta-item">
+                <icon name="star" size="12" color="#FF6B35" fill="{{true}}" />
+                <text class="meta-text">{{item.rating}}</text>
+              </view>
+              <view class="meta-dot"></view>
+              <view class="meta-item">
+                <icon name="schedule" size="12" color="#8d7168" />
+                <text class="meta-text">{{item.duration}}</text>
+              </view>
+              <view class="meta-dot"></view>
+              <view class="meta-item">
+                <text class="meta-text">{{item.difficulty}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部留白 -->
+    <view class="spacer"></view>
+  </view>
+
+  <!-- FAB 悬浮按钮 -->
+  <view class="fab" style="bottom: {{fabBottom}}px;" bindtap="onTapFAB">
+    <icon name="add" size="28" color="#fff" />
+  </view>
+
+</view>

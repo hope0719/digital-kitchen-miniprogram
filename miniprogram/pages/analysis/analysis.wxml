@@ -1,0 +1,157 @@
+<!-- pages/analysis/analysis.wxml -->
+<view class="page">
+
+  <!-- 顶部导航栏 -->
+  <view class="topbar" style="top: {{statusBarHeight}}px;">
+    <view class="topbar-left">
+      <icon name="menu" size="28" color="#ab3500" />
+      <text class="brand">AI 智能菜谱分析</text>
+    </view>
+    <view class="avatar">
+      <image
+        src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=200&q=80"
+        mode="aspectFill"
+      />
+    </view>
+  </view>
+
+  <view class="content" style="padding-top: {{contentTop}}rpx;">
+
+    <!-- Hero: 上传 + 输入 -->
+    <view class="section">
+      <view class="upload-card" hover-class="upload-hover" bindtap="onPickImage">
+        <view class="upload-glow"></view>
+        <view class="upload-inner">
+          <view class="upload-icon">
+            <icon name="cloud_upload" size="36" color="#ab3500" />
+          </view>
+          <text class="upload-title">上传菜谱图片</text>
+          <text class="upload-sub">拍摄食材或手写菜谱，AI 将为您解析营养成分</text>
+        </view>
+      </view>
+
+      <view class="textarea-wrap">
+        <textarea
+          class="recipe-textarea"
+          placeholder="或在此处粘贴菜谱文本内容..."
+          placeholder-class="textarea-placeholder"
+          value="{{inputText}}"
+          bindinput="onInput"
+          maxlength="500"
+        />
+        <view class="analyze-btn" hover-class="analyze-hover" bindtap="onAnalyze">
+          <icon name="analytics" size="18" color="#ffffff" fill="{{true}}" />
+          <text>开始分析</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 健康（圆环） -->
+    <view class="section">
+      <view class="score-card">
+        <view class="score-left">
+          <text class="score-title">健康</text>
+          <text class="score-tip">{{healthTip}}</text>
+          <view class="score-num">
+            <text class="score-big">{{score}}</text>
+            <text class="score-small">/100</text>
+          </view>
+        </view>
+        <view class="score-right">
+          <view class="ring">
+            <svg viewBox="0 0 100 100" class="ring-svg">
+              <circle cx="50" cy="50" r="42" class="ring-track" />
+              <circle cx="50" cy="50" r="42" class="ring-progress"
+                      stroke-dasharray="{{2 * 3.14159 * 42}}"
+                      stroke-dashoffset="{{(1 - score / 100) * 2 * 3.14159 * 42}}"
+                      transform="rotate(-90 50 50)" />
+            </svg>
+            <view class="ring-center">
+              <icon name="favorite" size="32" color="#390c00" fill="{{true}}" />
+            </view>
+          </view>
+        </view>
+        <view class="score-deco"></view>
+      </view>
+    </view>
+
+    <!-- 营养宏观分布 -->
+    <view class="section">
+      <view class="panel">
+        <view class="panel-head">
+          <text class="panel-tag">营养宏观分布</text>
+          <icon name="pie_chart" size="22" color="#ab3500" />
+        </view>
+        <view class="macro-list">
+          <view class="macro-item" wx:for="{{macros}}" wx:key="label">
+            <view class="macro-row">
+              <text class="macro-label">{{item.label}}</text>
+              <text class="macro-value">{{item.value}}</text>
+            </view>
+            <view class="macro-track">
+              <view class="macro-fill"
+                    style="width: {{item.width}}%; background: {{item.color}};"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="calorie-card" style="background-image: url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=900&q=80');">
+        <view class="calorie-mask"></view>
+        <view class="calorie-inner">
+          <text class="calorie-text">热量预估: {{calories}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 智能替换方案 -->
+    <view class="section">
+      <view class="panel">
+        <view class="sub-head">
+          <view class="sub-icon">
+            <icon name="auto_awesome" size="20" color="#00731e" />
+          </view>
+          <text class="panel-title">智能健康替换方案</text>
+        </view>
+        <view class="sub-grid">
+          <view class="sub-card" wx:for="{{substitutions}}" wx:key="recommended">
+            <view class="sub-cell primary">
+              <text class="sub-tag">建议用</text>
+              <text class="sub-name">{{item.recommended}}</text>
+            </view>
+            <icon name="trending_flat" size="24" color="#8d7168" />
+            <view class="sub-cell secondary">
+              <text class="sub-tag">替代</text>
+              <text class="sub-name strike">{{item.replaced}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 烹饪优化建议 -->
+    <view class="section">
+      <view class="tips-card">
+        <view class="tips-head">
+          <icon name="lightbulb" size="22" color="#7c5800" />
+          <text class="panel-title">烹饪优化建议</text>
+        </view>
+        <view class="tips-list">
+          <view class="tip-item" wx:for="{{tips}}" wx:key="title" wx:for-index="idx">
+            <view class="tip-num">{{idx + 1}}</view>
+            <text class="tip-text">{{item.title}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- CTA -->
+    <view class="cta-wrap">
+      <view class="cta-btn" hover-class="cta-hover" bindtap="onSave">
+        <text>保存分析并生成购物清单</text>
+      </view>
+    </view>
+
+  </view>
+
+</view>

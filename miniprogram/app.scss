@@ -1,0 +1,30 @@
+@import './styles/tokens.scss';
+
+/* app.wxss —— 全局样式 */
+page {
+  background: $surface;
+  color: $on-surface;
+  font-family: $font-body;
+  font-size: 28rpx;
+  line-height: 1.43;
+}
+
+view, text {
+  box-sizing: border-box;
+}
+
+button {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  line-height: normal;
+  &::after { border: none; }
+}
+
+// 通用隐藏滚动条
+.hide-scroll {
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+}

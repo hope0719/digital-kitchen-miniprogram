@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>数智厨房 · 小程序三屏预览</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --surface: #fcf9f8;
+    --surface-dim: #dcd9d9;
+    --surface-container-lowest: #ffffff;
+    --surface-container-low: #f6f3f2;
+    --surface-container: #f0eded;
+    --surface-container-high: #eae7e7;
+    --surface-variant: #e4e2e1;
+
+    --on-surface: #1b1c1c;
+    --on-surface-variant: #594139;
+    --outline: #8d7168;
+    --outline-variant: #e1bfb5;
+
+    --primary: #ab3500;
+    --primary-container: #ff6b35;
+    --on-primary: #ffffff;
+    --on-primary-container: #5f1900;
+    --primary-fixed: #ffdbd0;
+    --on-primary-fixed: #390c00;
+
+    --secondary: #006e1c;
+    --secondary-container: #91f78e;
+    --on-secondary-container: #00731e;
+
+    --tertiary: #7c5800;
+    --tertiary-container: #c78f00;
+    --tertiary-fixed: #ffdea8;
+    --on-tertiary-fixed: #271900;
+
+    --error: #ba1a1a;
+
+    --indigo: #4f46e5;
+
+    --bg-cat-quick: #fff4f0;
+    --bg-cat-healthy: #f0fff4;
+    --bg-cat-dessert: #fff9f0;
+    --bg-cat-breakfast: #f4f0ff;
+
+    --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+    background: #efeae8;
+    color: var(--on-surface);
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+  h1.title {
+    text-align: center;
+    font-size: 28px;
+    margin: 0 0 12px;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+  }
+  p.sub {
+    text-align: center;
+    margin: 0 0 40px;
+    color: #594139;
+  }
+  .screens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .device {
+    width: 380px;
+    border-radius: 36px;
+    background: #1b1c1c;
+    padding: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .device-screen {
+    width: 100%;
+    height: 760px;
+    border-radius: 26px;
+    overflow: hidden;
+    background: var(--surface);
+    position: relative;
+    overflow-y: auto;
+  }
+  .device-name {
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    margin-top: 12px;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .device-screen::-webkit-scrollbar { width: 0; }
+  .notch {
+    position: sticky;
+    top: 0;
+    height: 24px;
+    background: var(--surface);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .notch::after {
+    content: '';
+    width: 110px;
+    height: 6px;
+    background: #1b1c1c;
+    border-radius: 4px;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 44px;
+    background: var(--surface);
+  }
+  .topbar .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar .brand {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 18px;
+  }
+  .topbar .brand.cn { font-size: 16px; }
+  .topbar .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--primary-fixed);
+  }
+  .topbar .avatar.small {
+    width: 28px; height: 28px;
+    border: 1px solid var(--outline-variant);
+  }
+  .topbar .avatar img,
+  .topbar .avatar.small img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .content { padding: 0 20px 100px; }
+  .section { margin-top: 24px; }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .section-link { color: var(--primary); font-size: 12px; font-weight: 600; }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    background: var(--surface-container-low);
+    border-radius: 16px;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .search-bar input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: 13px;
+  }
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .icon svg { display: block; }
+
+  .rec-card {
+    position: relative;
+    display: inline-block;
+    width: 78%;
+    height: 200px;
+    margin-right: 16px;
+    border-radius: 18px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .rec-track { display: flex; overflow-x: auto; padding-bottom: 4px; }
+  .rec-track::-webkit-scrollbar { display: none; }
+  .rec-mask {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+  }
+  .rec-content {
+    position: absolute;
+    left: 14px; right: 14px; bottom: 14px;
+    z-index: 2; color: #fff;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .chip {
+    align-self: flex-start;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+  }
+  .chip-healthy { background: var(--secondary-container); color: var(--on-secondary-container); }
+  .chip-quick { background: var(--primary-container); color: var(--on-primary-container); }
+  .rec-title { font-weight: 700; font-size: 16px; line-height: 1.3; }
+
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .bento-cell {
+    height: 120px;
+    border-radius: 18px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .bento-name { font-weight: 600; font-size: 16px; color: var(--on-surface); }
+
+  .recipe-list { display: flex; flex-direction: column; gap: 14px; }
+  .recipe-card {
+    background: var(--surface-container-lowest);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .recipe-cover {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+  }
+  .like-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .recipe-body { padding: 14px; }
+  .recipe-title { font-weight: 600; font-size: 15px; }
+  .recipe-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--on-surface-variant);
+  }
+  .meta-left { display: flex; gap: 16px; align-items: center; }
+  .rating, .duration { display: flex; gap: 4px; align-items: center; }
+  .rating .num { color: var(--on-surface); font-weight: 700; }
+  .difficulty {
+    background: var(--surface-container);
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  /* ============ Analysis page ============ */
+  .upload-card {
+    position: relative;
+    background: var(--surface-container-low);
+    border: 2px dashed var(--outline-variant);
+    border-radius: 18px;
+    padding: 28px 16px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .upload-glow {
+    position: absolute;
+    bottom: -50px; right: -50px;
+    width: 180px; height: 180px;
+    background: var(--secondary-container);
+    opacity: 0.25;
+    filter: blur(40px);
+    border-radius: 50%;
+  }
+  .upload-icon {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: var(--primary-fixed);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 10px;
+    position: relative; z-index: 1;
+  }
+  .upload-title { font-weight: 600; font-size: 15px; position: relative; z-index: 1; }
+  .upload-sub { font-size: 12px; color: var(--on-surface-variant); margin-top: 4px; position: relative; z-index: 1; }
+  .textarea-wrap {
+    position: relative;
+    background: var(--surface-container-low);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .recipe-textarea {
+    width: 100%;
+    height: 110px;
+    border: 0;
+    background: transparent;
+    padding: 14px;
+    outline: none;
+    resize: none;
+    font-size: 13px;
+  }
+  .analyze-btn {
+    position: absolute;
+    right: 8px; bottom: 8px;
+    background: var(--primary);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+  }
+
+  .score-card {
+    position: relative;
+    background: var(--primary-fixed);
+    border-radius: 18px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .score-deco {
+    position: absolute;
+    top: 0; right: 0;
+    width: 130px; height: 130px;
+    background: var(--on-primary-fixed);
+    opacity: 0.1;
+    border-radius: 50%;
+    transform: translate(45px, -45px);
+  }
+  .score-title { font-weight: 600; font-size: 15px; color: var(--on-primary-fixed); }
+  .score-tip { font-size: 11px; color: var(--on-primary-fixed); opacity: 0.8; margin: 4px 0 10px; }
+  .score-num { display: flex; align-items: baseline; gap: 4px; position: relative; z-index: 1; }
+  .score-big { font-size: 30px; font-weight: 700; color: var(--on-primary-fixed); }
+  .score-small { font-size: 14px; color: var(--on-primary-fixed); opacity: 0.7; }
+  .ring { width: 90px; height: 90px; position: relative; }
+  .ring-svg { width: 100%; height: 100%; }
+  .ring-track { fill: none; stroke: rgba(57,12,0,0.2); stroke-width: 8; }
+  .ring-progress { fill: none; stroke: var(--on-primary-fixed); stroke-width: 8; stroke-linecap: round; }
+  .ring-center {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .panel {
+    background: var(--surface-container-high);
+    border-radius: 18px;
+    padding: 14px;
+  }
+  .panel-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .panel-tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--on-surface-variant); }
+  .panel-title { font-weight: 600; font-size: 15px; }
+  .sub-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .sub-icon {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--secondary-container);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .macro-list { display: flex; flex-direction: column; gap: 10px; }
+  .macro-row {
+    display: flex; justify-content: space-between;
+    font-size: 13px; margin-bottom: 4px;
+  }
+  .macro-value { font-weight: 700; }
+  .macro-track {
+    height: 6px; background: var(--surface); border-radius: 4px; overflow: hidden;
+  }
+  .macro-fill { height: 100%; border-radius: 4px; }
+
+  .calorie-card {
+    position: relative;
+    height: 140px;
+    border-radius: 18px;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .calorie-mask { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent); }
+  .calorie-inner { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px; }
+  .calorie-text { color: #fff; font-weight: 600; font-size: 15px; }
+
+  .sub-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .sub-card {
+    background: var(--surface-container-low);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sub-cell { display: flex; flex-direction: column; align-items: center; min-width: 60px; }
+  .sub-cell .sub-tag { font-size: 9px; color: var(--outline); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+  .sub-cell .sub-name { font-size: 13px; font-weight: 700; }
+  .sub-cell.primary .sub-name { color: var(--secondary); }
+  .sub-cell.secondary { opacity: 0.55; }
+  .sub-cell.secondary .sub-name { text-decoration: line-through; }
+
+  .tips-card {
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 18px;
+    padding: 18px;
+  }
+  .tips-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .tips-list { display: flex; flex-direction: column; gap: 12px; }
+  .tip-item { display: flex; gap: 10px; align-items: flex-start; }
+  .tip-num {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--tertiary-fixed);
+    color: var(--on-tertiary-fixed);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tip-text { font-size: 12px; line-height: 1.5; }
+
+  .cta-btn {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 999px;
+    padding: 14px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    margin: 24px 0 0;
+    box-shadow: 0 8px 20px rgba(171,53,0,0.25);
+  }
+
+  /* ============ Profile page ============ */
+  .page-mesh {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(255,107,53,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(0,110,28,0.08) 0%, transparent 50%),
+      var(--surface);
+  }
+  .profile-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--surface-container-high);
+    border-radius: 18px;
+    padding: 22px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .profile-avatar {
+    position: relative;
+    width: 90px; height: 90px;
+    margin: 0 auto 12px;
+  }
+  .profile-avatar img {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: var(--shadow-md);
+    object-fit: cover;
+  }
+  .pro-badge {
+    position: absolute;
+    bottom: -2px; right: -8px;
+    background: var(--secondary);
+    color: #fff;
+    font-size: 9px; font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .profile-name { font-size: 18px; font-weight: 700; }
+  .profile-level {
+    font-size: 12px; color: var(--on-surface-variant);
+    display: flex; align-items: center; gap: 4px; justify-content: center;
+    margin-top: 4px;
+  }
+  .stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 18px; padding-top: 16px;
+    border-top: 1px solid var(--outline-variant);
+  }
+  .stat-cell {
+    display: flex; flex-direction: column; gap: 2px; align-items: center;
+    border-right: 1px solid var(--outline-variant);
+  }
+  .stat-cell:last-child { border-right: 0; }
+  .stat-value { color: var(--primary); font-size: 16px; font-weight: 700; }
+  .stat-label { color: var(--on-surface-variant); font-size: 10px; }
+
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .action-card {
+    background: var(--surface-container-low);
+    border-radius: 18px;
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .action-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .action-title { font-weight: 600; font-size: 14px; }
+  .action-desc { font-size: 11px; color: var(--on-surface-variant); }
+
+  .ai-card {
+    position: relative;
+    background: var(--on-primary-fixed);
+    border-radius: 18px;
+    padding: 18px;
+    color: #fff;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+  .ai-deco {
+    position: absolute;
+    top: 0; right: 0;
+    width: 130px; height: 130px;
+    background: var(--primary-container);
+    opacity: 0.2;
+    filter: blur(30px);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+  }
+  .ai-inner {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .ai-text { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .ai-tag { display: flex; align-items: center; gap: 6px; }
+  .ai-tag-text { color: var(--primary-container); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
+  .ai-title { font-size: 16px; font-weight: 700; }
+  .ai-sub { color: rgba(255,255,255,0.6); font-size: 11px; line-height: 1.5; }
+  .ai-arrow {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-label {
+    font-size: 10px; font-weight: 700;
+    color: var(--on-surface-variant);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin: 0 4px 8px;
+    display: block;
+  }
+  .settings {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--surface-container-high);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .setting-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--surface-container);
+  }
+  .setting-row:last-child { border-bottom: 0; }
+  .setting-left { display: flex; align-items: center; gap: 14px; }
+  .setting-label { font-size: 13px; }
+  .setting-label.danger { color: var(--error); }
+  .version {
+    text-align: center; font-size: 11px; color: var(--outline-variant);
+    margin: 24px 0 0;
+  }
+
+  /* FAB */
+  .fab {
+    position: absolute;
+    right: 20px; bottom: 110px;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+  }
+
+  /* Tabbar */
+  .tabbar {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    background: var(--surface);
+    padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0));
+    box-shadow: 0 -8px 20px rgba(0,0,0,0.04);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  }
+  .tab-item { flex: 1; display: flex; justify-content: center; }
+  .pill {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 16px; border-radius: 999px;
+    transform: scale(0.95);
+    transition: all 0.2s ease;
+  }
+  .pill.active { background: var(--primary-container); transform: scale(1); }
+  .tab-label { font-size: 10px; font-weight: 600; color: var(--on-surface-variant); }
+  .pill.active .tab-label { color: var(--on-primary-container); }
+</style>
+</head>
+<body>
+  <h1 class="title">🥗 Digital Kitchen · 数智厨房</h1>
+  <p class="sub">微信小程序三屏并排预览 · Home / Analysis / Profile</p>
+
+  <div class="screens">
+
+    <!-- ========== Home ========== -->
+    <div class="device">
+      <div class="device-screen">
+
+        <div class="notch"></div>
+
+        <div class="topbar">
+          <div class="left">
+            <span class="icon" style="width:24px;height:24px;color:#ab3500;">
+              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </span>
+            <span class="brand">Digital Kitchen</span>
+          </div>
+          <div class="avatar">
+            <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=160&q=80" alt="" />
+          </div>
+        </div>
+
+        <div class="content">
+
+          <div class="section">
+            <div class="search-bar">
+              <span class="icon" style="width:18px;height:18px;color:#8d7168;">
+                <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg>
+              </span>
+              <input placeholder="Search for recipes, ingredients..." />
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head">
+              <div class="section-title">Today's Recommendations</div>
+              <div class="section-link">View all</div>
+            </div>
+            <div class="rec-track">
+              <div class="rec-card" style="background-image:url('https://images.unsplash.com/photo-1540420773420-3366772f4999?w=900&q=80')">
+                <div class="rec-mask"></div>
+                <div class="rec-content">
+                  <span class="chip chip-healthy">HEALTHY CHOICE</span>
+                  <div class="rec-title">Summer Mediterranean Salad</div>
+                </div>
+              </div>
+              <div class="rec-card" style="background-image:url('https://images.unsplash.com/photo-1600891964092-4316c288032e?w=900&q=80')">
+                <div class="rec-mask"></div>
+                <div class="rec-content">
+                  <span class="chip chip-quick">QUICK DINNER</span>
+                  <div class="rec-title">Pan-Seared Herb Steak</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head"><div class="section-title">Categories</div></div>
+            <div class="bento">
+              <div class="bento-cell" style="background:var(--bg-cat-quick);">
+                <span class="icon" style="width:30px;height:30px;color:#ab3500;">
+                  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="2" x2="14" y2="2"/><circle cx="12" cy="14" r="8"/><polyline points="12 10 12 14 15 16"/></svg>
+                </span>
+                <div class="bento-name">Quick Meals</div>
+              </div>
+              <div class="bento-cell" style="background:var(--bg-cat-healthy);">
+                <span class="icon" style="width:30px;height:30px;color:#006e1c;">
+                  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c2-1 4-3 6-5 3-3 4-6 4-10-4 0-7 1-10 4-2 2-3 5-3 8"/><path d="M3 20c0-3 1-5 3-7"/></svg>
+                </span>
+                <div class="bento-name">Healthy</div>
+              </div>
+              <div class="bento-cell" style="background:var(--bg-cat-dessert);">
+                <span class="icon" style="width:30px;height:30px;color:#7c5800;">
+                  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17h18"/><path d="M5 17V11a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6"/><path d="M9 8V4a3 3 0 0 1 6 0v4"/></svg>
+                </span>
+                <div class="bento-name">Desserts</div>
+              </div>
+              <div class="bento-cell" style="background:var(--bg-cat-breakfast);">
+                <span class="icon" style="width:30px;height:30px;color:#4f46e5;">
+                  <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3c-4 0-7 5-7 9a7 7 0 0 0 14 0c0-4-3-9-7-9z"/></svg>
+                </span>
+                <div class="bento-name">Breakfast</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="section-head"><div class="section-title">Popular Recipes</div></div>
+            <div class="recipe-list">
+              <div class="recipe-card">
+                <div class="recipe-cover" style="background-image:url('https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=800&q=80')">
+                  <div class="like-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="#ab3500"><path d="M12 21s-7-4.35-9.5-9C0.5 7 4 3 7.5 3c2 0 3.5 1 4.5 2.5C13 4 14.5 3 16.5 3 20 3 23.5 7 21.5 12 19 16.65 12 21 12 21z"/></svg>
+                  </div>
+                </div>
+                <div class="recipe-body">
+                  <div class="recipe-title">Creamy Wild Mushroom Risotto</div>
+                  <div class="recipe-meta">
+                    <div class="meta-left">
+                      <div class="rating">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#ab3500"><path d="M12 2.5l2.95 6.4 7.05.65-5.35 4.7 1.6 6.85L12 17.65 5.75 21.1l1.6-6.85L2 9.55l7.05-.65L12 2.5z"/></svg>
+                        <span class="num">4.9</span>
+                      </div>
+                      <div class="duration">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#594139" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                        35 mins
+                      </div>
+                    </div>
+                    <div class="difficulty">Easy</div>
+                  </div>
+                </div>
+              </div>
+              <div class="recipe-card">
+                <div class="recipe-cover" style="background-image:url('https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800&q=80')">
+                  <div class="like-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="#ab3500"><path d="M12 21s-7-4.35-9.5-9C0.5 7 4 3 7.5 3c2 0 3.5 1 4.5 2.5C13 4 14.5 3 16.5 3 20 3 23.5 7 21.5 12 19 16.65 12 21 12 21z"/></svg>
+                  </div>
+                </div>
+                <div class="recipe-body">
+                  <div class="recipe-title">Classic Buttermilk Pancakes</div>
+                  <div class="recipe-meta">
+                    <div class="meta-left">
+                      <div class="rating">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="#ab3500"><path d="M12 2.5l2.95 6.4 7.05.65-5.35 4.7 1.6 6.85L12 17.65 5.75 21.1l1.6-6.85L2 9.55l7.05-.65L12 2.5z"/></svg>
+                        <span class="num">4.7</span>
+                      </div>
+                      <div class="duration">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#594139" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                        20 mins
+                      </div>
+                    </div>
+                    <div class="difficulty">Beginner</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="fab">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+
+        <div class="tabbar">
+          <div class="tab-item"><div class="pill active">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#5f1900"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+            <div class="tab-label">Home</div>
+          </div></div>
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="20" x2="4" y2="10"/><line x1="10" y1="20" x2="10" y2="4"/><line x1="16" y1="20" x2="16" y2="14"/><line x1="20" y1="20" x2="2" y2="20"/></svg>
+            <div class="tab-label">Analysis</div>
+          </div></div>
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+            <div class="tab-label">Profile</div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="device-name">首页 · HOME</div>
+    </div>
+
+    <!-- ========== Analysis ========== -->
+    <div class="device">
+      <div class="device-screen">
+
+        <div class="notch"></div>
+
+        <div class="topbar">
+          <div class="left">
+            <span class="icon" style="width:24px;height:24px;color:#ab3500;">
+              <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            </span>
+            <span class="brand cn">AI 智能菜谱分析</span>
+          </div>
+          <div class="avatar">
+            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=160&q=80" alt="" />
+          </div>
+        </div>
+
+        <div class="content" style="max-width:420px;margin:0 auto;">
+
+          <div class="section">
+            <div class="upload-card">
+              <div class="upload-glow"></div>
+              <div class="upload-icon">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ab3500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-1-7.9A6 6 0 0 1 18 9.5 4.5 4.5 0 0 1 18 18"/><polyline points="12 12 12 21"/><polyline points="8 16 12 12 16 16"/></svg>
+              </div>
+              <div class="upload-title">上传菜谱图片</div>
+              <div class="upload-sub">拍摄食材或手写菜谱，AI 将为您解析营养成分</div>
+            </div>
+
+            <div class="textarea-wrap">
+              <textarea class="recipe-textarea" placeholder="或在此处粘贴菜谱文本内容..."></textarea>
+              <div class="analyze-btn">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="#fff"><line x1="4" y1="20" x2="4" y2="10" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="10" y1="20" x2="10" y2="14" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="20" x2="16" y2="6" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="20" y1="20" x2="2" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+                开始分析
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="score-card">
+              <div class="score-deco"></div>
+              <div style="position:relative;z-index:1;">
+                <div class="score-title">健康评分</div>
+                <div class="score-tip">综合食材比例与烹饪方式得出</div>
+                <div class="score-num">
+                  <span class="score-big">85</span>
+                  <span class="score-small">/100</span>
+                </div>
+              </div>
+              <div class="ring">
+                <svg viewBox="0 0 100 100" class="ring-svg">
+                  <circle cx="50" cy="50" r="42" class="ring-track"/>
+                  <circle cx="50" cy="50" r="42" class="ring-progress" stroke-dasharray="263.89" stroke-dashoffset="39.58" transform="rotate(-90 50 50)"/>
+                </svg>
+                <div class="ring-center">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="#390c00"><path d="M12 21s-7-4.35-9.5-9C0.5 7 4 3 7.5 3c2 0 3.5 1 4.5 2.5C13 4 14.5 3 16.5 3 20 3 23.5 7 21.5 12 19 16.65 12 21 12 21z"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="panel">
+              <div class="panel-head">
+                <div class="panel-tag">营养宏观分布</div>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ab3500" stroke-width="2" stroke-linejoin="round"><path d="M21 12A9 9 0 1 1 12 3v9h9z"/></svg>
+              </div>
+              <div class="macro-list">
+                <div>
+                  <div class="macro-row"><span>蛋白质</span><span class="macro-value">28g</span></div>
+                  <div class="macro-track"><div class="macro-fill" style="width:40%;background:#006e1c;"></div></div>
+                </div>
+                <div>
+                  <div class="macro-row"><span>碳水</span><span class="macro-value">45g</span></div>
+                  <div class="macro-track"><div class="macro-fill" style="width:65%;background:#c78f00;"></div></div>
+                </div>
+                <div>
+                  <div class="macro-row"><span>脂肪</span><span class="macro-value">12g</span></div>
+                  <div class="macro-track"><div class="macro-fill" style="width:25%;background:#ff6b35;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="calorie-card" style="background-image:url('https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=900&q=80')">
+              <div class="calorie-mask"></div>
+              <div class="calorie-inner"><div class="calorie-text">热量预估: 420 kcal</div></div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="panel">
+              <div class="sub-head">
+                <div class="sub-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#00731e"><path d="M12 2l1.8 4.6L18.5 8 13.8 9.5 12 14l-1.8-4.5L5.5 8l4.7-1.4L12 2z"/><path d="M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z"/></svg>
+                </div>
+                <div class="panel-title">智能健康替换方案</div>
+              </div>
+              <div class="sub-grid">
+                <div class="sub-card">
+                  <div class="sub-cell primary">
+                    <span class="sub-tag">建议用</span>
+                    <span class="sub-name">蜂蜜</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8d7168" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 12 7 8 11 12 21 2"/><polyline points="14 2 21 2 21 9"/></svg>
+                  <div class="sub-cell secondary">
+                    <span class="sub-tag">替代</span>
+                    <span class="sub-name">白砂糖</span>
+                  </div>
+                </div>
+                <div class="sub-card">
+                  <div class="sub-cell primary">
+                    <span class="sub-tag">建议用</span>
+                    <span class="sub-name">橄榄油</span>
+                  </div>
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8d7168" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 12 7 8 11 12 21 2"/><polyline points="14 2 21 2 21 9"/></svg>
+                  <div class="sub-cell secondary">
+                    <span class="sub-tag">替代</span>
+                    <span class="sub-name">动物油脂</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="tips-card">
+              <div class="tips-head">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#7c5800" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.7 1 1.6 1 2.5h6c0-.9.4-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg>
+                <div class="panel-title">烹饪优化建议</div>
+              </div>
+              <div class="tips-list">
+                <div class="tip-item">
+                  <div class="tip-num">1</div>
+                  <div class="tip-text">尝试采用<b style="color:#ab3500;">低温慢煮</b>代替高温油炸，能有效保留蛋白质活性并减少油脂摄入。</div>
+                </div>
+                <div class="tip-item">
+                  <div class="tip-num">2</div>
+                  <div class="tip-text">在出锅前加入香草（如罗勒或迷迭香），可以利用香气提升风味，从而<b style="color:#ab3500;">减少食盐</b>的使用量。</div>
+                </div>
+                <div class="tip-item">
+                  <div class="tip-num">3</div>
+                  <div class="tip-text">加入适量的黑胡椒可以帮助提升食材中某些抗氧化成分的吸收率。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-btn">保存分析并生成购物清单</div>
+
+        </div>
+
+        <div class="tabbar">
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+            <div class="tab-label">Home</div>
+          </div></div>
+          <div class="tab-item"><div class="pill active">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#5f1900"><line x1="4" y1="20" x2="4" y2="10" stroke="#5f1900" stroke-width="2.2" stroke-linecap="round"/><line x1="10" y1="20" x2="10" y2="4" stroke="#5f1900" stroke-width="2.2" stroke-linecap="round"/><line x1="16" y1="20" x2="16" y2="14" stroke="#5f1900" stroke-width="2.2" stroke-linecap="round"/><line x1="20" y1="20" x2="2" y2="20" stroke="#5f1900" stroke-width="2.2" stroke-linecap="round"/></svg>
+            <div class="tab-label">Analysis</div>
+          </div></div>
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+            <div class="tab-label">Profile</div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="device-name">AI 智能分析 · ANALYSIS</div>
+    </div>
+
+    <!-- ========== Profile ========== -->
+    <div class="device">
+      <div class="device-screen page-mesh">
+
+        <div class="notch"></div>
+
+        <div class="topbar">
+          <span class="icon" style="width:24px;height:24px;color:#ab3500;">
+            <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </span>
+          <span class="brand">Digital Kitchen</span>
+          <div class="avatar small">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&q=80" alt="" />
+          </div>
+        </div>
+
+        <div class="content">
+
+          <div class="section">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&q=80" alt="" />
+                <div class="pro-badge">
+                  <svg viewBox="0 0 24 24" width="10" height="10" fill="#fff"><path d="M9 12l2 2 4-4"/></svg>
+                  PRO
+                </div>
+              </div>
+              <div class="profile-name">Alex Rivera</div>
+              <div class="profile-level">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#594139" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v9a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2"/><path d="M9 13v9"/><path d="M17 2c-2 0-3 2-3 5v5h3v9"/></svg>
+                Cooking Level: Hobbyist
+              </div>
+              <div class="stats">
+                <div class="stat-cell"><span class="stat-value">42</span><span class="stat-label">Recipes Made</span></div>
+                <div class="stat-cell"><span class="stat-value">128</span><span class="stat-label">Favorites</span></div>
+                <div class="stat-cell"><span class="stat-value">850</span><span class="stat-label">Followers</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="action-grid">
+              <div class="action-card">
+                <div class="action-icon" style="background:#ffdbd0;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#390c00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="1"/><path d="M7 7h6"/><path d="M7 11h6"/><path d="M7 15h4"/><rect x="7" y="7" width="14" height="14" rx="1" opacity="0.4"/></svg>
+                </div>
+                <div class="action-title">My Collection</div>
+                <div class="action-desc">12 Saved Playlists</div>
+              </div>
+              <div class="action-card">
+                <div class="action-icon" style="background:#91f78e;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#00731e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/><line x1="12" y1="7" x2="12" y2="12"/><line x1="12" y1="12" x2="15" y2="14"/></svg>
+                </div>
+                <div class="action-title">Cooking History</div>
+                <div class="action-desc">Recent 5 meals</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="ai-card">
+              <div class="ai-deco"></div>
+              <div class="ai-inner">
+                <div class="ai-text">
+                  <div class="ai-tag">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="#ff6b35"><path d="M12 3l1.5 4 4 1.5-4 1.5L12 14l-1.5-4-4-1.5 4-1.5L12 3z"/><path d="M19 14l.9 2.3L22 17l-2.1.7L19 20l-.9-2.3L16 17l2.1-.7L19 14z"/></svg>
+                    <span class="ai-tag-text">PREMIUM AI</span>
+                  </div>
+                  <div class="ai-title">AI Analysis Records</div>
+                  <div class="ai-sub">Review your nutritional insights and technique improvements.</div>
+                </div>
+                <div class="ai-arrow">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <span class="section-label">PREFERENCE & SUPPORT</span>
+            <div class="settings">
+              <div class="setting-row">
+                <div class="setting-left">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#594139" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg>
+                  <span class="setting-label">Account Settings</span>
+                </div>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#e1bfb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#594139" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+                  <span class="setting-label">Notifications</span>
+                </div>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#e1bfb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#594139" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span class="setting-label">Help & Support</span>
+                </div>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#e1bfb5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+              </div>
+              <div class="setting-row">
+                <div class="setting-left">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ba1a1a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  <span class="setting-label danger">Log Out</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="version">Digital Kitchen v2.4.0</div>
+
+        </div>
+
+        <div class="tabbar">
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>
+            <div class="tab-label">Home</div>
+          </div></div>
+          <div class="tab-item"><div class="pill">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#594139" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="20" x2="4" y2="10"/><line x1="10" y1="20" x2="10" y2="4"/><line x1="16" y1="20" x2="16" y2="14"/><line x1="20" y1="20" x2="2" y2="20"/></svg>
+            <div class="tab-label">Analysis</div>
+          </div></div>
+          <div class="tab-item"><div class="pill active">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#5f1900"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+            <div class="tab-label">Profile</div>
+          </div></div>
+        </div>
+
+      </div>
+      <div class="device-name">个人中心 · PROFILE</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

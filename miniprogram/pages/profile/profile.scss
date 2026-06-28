@@ -1,0 +1,302 @@
+@import '../../styles/tokens.scss';
+
+.page {
+  min-height: 100vh;
+  background: $surface;
+  padding-bottom: 240rpx;
+}
+.page-mesh {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(255, 107, 53, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 100% 100%, rgba(0, 110, 28, 0.06) 0%, transparent 50%),
+    $surface;
+}
+
+// ============ Top AppBar ============
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 $spacing-md;
+  background: $surface;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+.brand {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 700;
+  color: $primary;
+}
+.avatar-sm {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: $radius-pill;
+  overflow: hidden;
+  border: 2rpx solid $outline-variant;
+  image { width: 100%; height: 100%; }
+}
+
+// ============ Layout ============
+.content {
+  padding: $spacing-lg $spacing-md $spacing-2xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+.section-label {
+  font-size: $fs-label-md;
+  font-weight: 600;
+  color: $on-surface-variant;
+  text-transform: uppercase;
+  letter-spacing: 2rpx;
+  padding: 0 8rpx;
+}
+
+// ============ Profile Card ============
+.profile-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16rpx);
+  -webkit-backdrop-filter: blur(16rpx);
+  border: 2rpx solid $surface-container-high;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: $shadow-sm;
+}
+.profile-avatar {
+  position: relative;
+  width: 192rpx;
+  height: 192rpx;
+  border-radius: $radius-pill;
+  overflow: visible;
+  margin-bottom: $spacing-md;
+  image {
+    width: 100%;
+    height: 100%;
+    border-radius: $radius-pill;
+    border: 8rpx solid #fff;
+    box-shadow: $shadow-md;
+  }
+}
+.pro-badge {
+  position: absolute;
+  bottom: -4rpx;
+  right: -16rpx;
+  background: $secondary;
+  color: #fff;
+  font-size: $fs-label-md;
+  font-weight: 600;
+  padding: 6rpx 16rpx;
+  border-radius: $radius-pill;
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+.profile-name {
+  font-family: $font-headline;
+  font-size: $fs-headline-lg-mobile;
+  font-weight: 700;
+  color: $on-surface;
+}
+.profile-level {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 8rpx;
+  font-size: $fs-body-md;
+  color: $on-surface-variant;
+}
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 2rpx solid $outline-variant;
+}
+.stat-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  border-right: 2rpx solid $outline-variant;
+}
+.stat-cell:last-child { border-right: none; }
+.stat-value {
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+  color: $primary;
+}
+.stat-label {
+  font-size: $fs-label-md;
+  color: $on-surface-variant;
+}
+
+// ============ Action Cards ============
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+}
+.action-card {
+  background: $surface-container-low;
+  border-radius: $radius-xl;
+  padding: $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  transition: transform 0.15s ease;
+}
+.action-hover {
+  transform: scale(0.97);
+}
+.action-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-title {
+  font-family: $font-headline;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: $on-surface;
+}
+.action-desc {
+  font-size: $fs-label-md;
+  color: $on-surface-variant;
+}
+
+// ============ AI Highlight Card ============
+.ai-card {
+  position: relative;
+  background: $on-primary-fixed;
+  border-radius: $radius-xl;
+  padding: $spacing-lg;
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+}
+.ai-hover {
+  transform: scale(0.99);
+}
+.ai-deco {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 256rpx;
+  height: 256rpx;
+  background: $primary-container;
+  opacity: 0.2;
+  filter: blur(48rpx);
+  border-radius: $radius-pill;
+  transform: translate(64rpx, -64rpx);
+  transition: transform 0.7s ease;
+}
+.ai-card:hover .ai-deco {
+  transform: translate(40rpx, -40rpx) scale(1.4);
+}
+.ai-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+}
+.ai-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  flex: 1;
+}
+.ai-tag {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.ai-tag-text {
+  color: $primary-container;
+  font-size: $fs-label-md;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+.ai-title {
+  color: #fff;
+  font-family: $font-headline;
+  font-size: $fs-headline-md;
+  font-weight: 600;
+}
+.ai-sub {
+  color: rgba(255,255,255,0.6);
+  font-size: $fs-body-md;
+  line-height: 1.5;
+  max-width: 360rpx;
+}
+.ai-arrow {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: $radius-pill;
+  background: rgba(255,255,255,0.1);
+  border: 2rpx solid rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+// ============ Settings ============
+.settings {
+  background: $surface-container-lowest;
+  border: 2rpx solid $surface-container-high;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 2rpx solid $surface-container;
+  transition: background 0.2s ease;
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-hover {
+  background: $surface-container-low;
+}
+.setting-left {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+.setting-label {
+  font-size: $fs-body-lg;
+  color: $on-surface;
+}
+.danger {
+  color: $error;
+}
+
+// ============ Version ============
+.version {
+  text-align: center;
+  padding: $spacing-xl 0;
+  font-size: $fs-label-md;
+  color: $outline-variant;
+}

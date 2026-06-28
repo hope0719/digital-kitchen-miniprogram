@@ -1,0 +1,20 @@
+# 微信小程序自动生成
+miniprogram/.DS_Store
+node_modules/
+*.log
+npm-debug.log*
+
+# 编译产物
+miniprogram/**/*.js.map
+miniprogram/**/*.css.map
+.project
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
